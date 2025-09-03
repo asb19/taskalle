@@ -17,11 +17,12 @@ type TaskService interface {
 }
 
 type taskService struct {
-	repo repo.TaskRepository
+	repo       repo.TaskRepository
+	userClient UserClient
 }
 
-func NewTaskService(repo repo.TaskRepository) TaskService {
-	return &taskService{repo: repo}
+func NewTaskService(repo repo.TaskRepository, userClient UserClient) TaskService {
+	return &taskService{repo: repo, userClient: userClient}
 }
 
 func (s *taskService) CreateTask(ctx context.Context, task *model.Task) (model.Task, error) {
@@ -36,7 +37,19 @@ func (s *taskService) GetTasks(ctx context.Context, status string, page, limit i
 }
 
 func (s *taskService) GetTaskByID(ctx context.Context, id uuid.UUID) (*model.Task, error) {
-	return s.repo.GetByID(ctx, id)
+	task, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return &model.Task{}, err
+	}
+
+	if task.AssignedTo != uuid.Nil {
+		user, err := s.userClient.GetUser(task.AssignedTo)
+		if err == nil {
+			task.AssignedUser = model.User{ID: user.ID, Name: user.Name}
+		}
+	}
+	return task, nil
+
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, task *model.Task) error {

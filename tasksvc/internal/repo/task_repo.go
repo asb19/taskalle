@@ -75,8 +75,8 @@ func (r *PostgresTaskRepository) GetAll(ctx context.Context, status string, page
 func (r *PostgresTaskRepository) GetByID(ctx context.Context, id uuid.UUID) (*model.Task, error) {
 	var task model.Task
 	err := r.db.QueryRow(ctx,
-		`SELECT id, title, description, status, created_at, updated_at FROM tasks WHERE id=$1`, id).
-		Scan(&task.Id, &task.Title, &task.Description, &task.Status, &task.CreatedAt, &task.UpdatedAt)
+		`SELECT id, title, description, status, created_at, updated_at,assigned_to FROM tasks WHERE id=$1`, id).
+		Scan(&task.Id, &task.Title, &task.Description, &task.Status, &task.CreatedAt, &task.UpdatedAt, &task.AssignedTo)
 	if err != nil {
 		return nil, err
 	}

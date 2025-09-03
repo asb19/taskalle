@@ -36,7 +36,8 @@ func main() {
 	}
 	defer dbpool.Close()
 	repo := repo.NewPostgresTaskRepository(dbpool)
-	service := service.NewTaskService(repo)
+	userClient := service.NewUserClient("http://localhost:8081")
+	service := service.NewTaskService(repo, *userClient)
 	taskHandler := handler.NewHandler(service)
 
 	r := mux.NewRouter()

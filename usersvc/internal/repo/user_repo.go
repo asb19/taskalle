@@ -9,7 +9,7 @@ import (
 )
 
 type UserRepository interface {
-	GetByID(ctx context.Context, id uuid.UUID) (*model.User, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*model.UserPublicInfo, error)
 }
 
 type PostgresUserRepository struct {
@@ -18,4 +18,15 @@ type PostgresUserRepository struct {
 
 func NewPostgresUserRepository(db *pgxpool.Pool) *PostgresUserRepository {
 	return &PostgresUserRepository{db: db}
+}
+
+func (r *PostgresUserRepository) GetByID(ctx context.Context, id uuid.UUID) (*model.UserPublicInfo, error) {
+	var user model.UserPublicInfo
+	err := r.db.QueryRow(ctx,
+		`SELECT id, name FROM users WHERE id=$1`, id).
+		Scan(&user.Id, &user.Name)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
