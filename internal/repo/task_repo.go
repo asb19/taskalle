@@ -6,12 +6,13 @@ import (
 
 	"github.com/asb19/tasksvc/internal/model"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type TaskRepository interface {
 	Create(ctx context.Context, task *model.Task) (model.Task, error)
-	GetAll(ctx context.Context) ([]model.Task, error)
+	GetAll(ctx context.Context, status string, page, limit int) ([]model.Task, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*model.Task, error)
 	Update(ctx context.Context, task *model.Task) error
 	Delete(ctx context.Context, id uuid.UUID) error
@@ -39,8 +40,22 @@ func (r *PostgresTaskRepository) Create(ctx context.Context, task *model.Task) (
 	return createdTask, err
 }
 
-func (r *PostgresTaskRepository) GetAll(ctx context.Context) ([]model.Task, error) {
-	rows, err := r.db.Query(ctx, `SELECT id, title, description, status, created_at, updated_at FROM tasks`)
+func (r *PostgresTaskRepository) GetAll(ctx context.Context, status string, page, limit int) ([]model.Task, error) {
+	var rows pgx.Rows
+	var err error
+
+	if status != "" {
+		rows, err = r.db.Query(ctx,
+			`SELECT id, title, description, status FROM tasks WHERE status=$1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
+			status, limit, (page-1)*limit,
+		)
+	} else {
+		rows, err = r.db.Query(ctx,
+			`SELECT id, title, description, status FROM tasks ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+			limit, (page-1)*limit,
+		)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -48,11 +63,11 @@ func (r *PostgresTaskRepository) GetAll(ctx context.Context) ([]model.Task, erro
 
 	var tasks []model.Task
 	for rows.Next() {
-		var task model.Task
-		if err := rows.Scan(&task.Id, &task.Title, &task.Description, &task.Status, &task.CreatedAt, &task.UpdatedAt); err != nil {
+		var t model.Task
+		if err := rows.Scan(&t.Id, &t.Title, &t.Description, &t.Status); err != nil {
 			return nil, err
 		}
-		tasks = append(tasks, task)
+		tasks = append(tasks, t)
 	}
 	return tasks, nil
 }

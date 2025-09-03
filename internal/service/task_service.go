@@ -10,7 +10,7 @@ import (
 
 type TaskService interface {
 	CreateTask(ctx context.Context, task *model.Task) (model.Task, error)
-	GetTasks(ctx context.Context) ([]model.Task, error)
+	GetTasks(ctx context.Context, status string, page, limit int) ([]model.Task, error)
 	GetTaskByID(ctx context.Context, id uuid.UUID) (*model.Task, error)
 	UpdateTask(ctx context.Context, task *model.Task) error
 	DeleteTask(ctx context.Context, id uuid.UUID) error
@@ -31,8 +31,8 @@ func (s *taskService) CreateTask(ctx context.Context, task *model.Task) (model.T
 	return s.repo.Create(ctx, task)
 }
 
-func (s *taskService) GetTasks(ctx context.Context) ([]model.Task, error) {
-	return s.repo.GetAll(ctx)
+func (s *taskService) GetTasks(ctx context.Context, status string, page, limit int) ([]model.Task, error) {
+	return s.repo.GetAll(ctx, status, page, limit)
 }
 
 func (s *taskService) GetTaskByID(ctx context.Context, id uuid.UUID) (*model.Task, error) {

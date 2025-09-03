@@ -6,6 +6,7 @@ import (
 
 	"github.com/asb19/tasksvc/internal/model"
 	"github.com/asb19/tasksvc/internal/service"
+	"github.com/asb19/tasksvc/internal/utils"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
@@ -42,7 +43,11 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) GetAllTask(w http.ResponseWriter, r *http.Request) {
 
-	tasks, err := h.service.GetTasks(r.Context())
+	q := r.URL.Query()
+	status := q.Get("status")
+	limit := utils.ParseQueryParamInt(q, "limit", 10) // default = 10
+	page := utils.ParseQueryParamInt(q, "page", 1)    // default = 0
+	tasks, err := h.service.GetTasks(r.Context(), status, page, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
