@@ -67,6 +67,17 @@ func (h *Handler) GetAllTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(tasks)
 }
 
+// GetTask godoc
+// @Summary Get a task by ID
+// @Description Get a single task including assigned user info
+// @Tags tasks
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Task ID (UUID)"
+// @Success 200 {object} model.Task
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /tasks/{id} [get]
 func (h *Handler) GetTask(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := uuid.Parse(idStr)
@@ -78,6 +89,18 @@ func (h *Handler) GetTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(t)
 }
 
+// UpdateTask godoc
+// @Summary Update a task by ID
+// @Description Update a task's title, description, status, or assigned user
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param id path string true "Task ID (UUID)"
+// @Param task body model.Task true "Task object"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /tasks/{id} [put]
 func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := uuid.Parse(idStr)
@@ -94,6 +117,17 @@ func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "updated"})
 }
 
+// DeleteTask godoc
+// @Summary Delete a task by ID
+// @Description Delete a task from the database by its ID
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param id path string true "Task ID (UUID)"
+// @Success 200 {object} map[string]string "Task deleted successfully"
+// @Failure 400 {object} map[string]string "Invalid task ID"
+// @Failure 404 {object} map[string]string "Task not found"
+// @Router /tasks/{id} [delete]
 func (h *Handler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := uuid.Parse(idStr)
