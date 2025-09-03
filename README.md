@@ -51,6 +51,33 @@ Swagger docs are available at:
 
 Task Service → http://localhost:8080/swagger/index.html
 
+---
+
+### ⚡ Scalability
+
+- **Horizantal Scaling**
+    - each service can be scaled independently and load balanced using NGINX etc.
+    - Later when we can use kubernetes and HPA can be applied for autoscaling each services
+- **Database Scaling**
+    - can add read replica for heavy traffic
+    - can implement connection pooling for better connection utilization
+    - sharding/partioning can be added later
+- **Caching**
+    - can add cache like Redis etc for storing frequently requested data
+
+- **API Gateway**
+    - can place an API gateway for all the services
+    - it can help us with auth,rate limiting,request routing
+    - ex: AWS API Gateway/Kong
+- **gRPC**
+    - for this assignment i have used REST as communication medium between the services
+    - for higher throughput, w ecan use gRPC or message Queues.
+
+---
+
+## Enjoyed the Assignment.I could have made it more detailed or added more layers. But let me know the feedback. Thanks 😊.
+
+
 
 
 
