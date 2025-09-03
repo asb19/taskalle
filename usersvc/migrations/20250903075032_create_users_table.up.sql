@@ -1,11 +1,14 @@
+
+
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 
-CREATE TABLE IF NOT EXISTS tasks (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title TEXT NOT NULL,
-    description TEXT,
-    status TEXT NOT NULL CHECK (status IN ('pending', 'inprogress', 'done')),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+   
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

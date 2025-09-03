@@ -24,9 +24,9 @@ import (
 
 func main() {
 	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		dbURL = "postgres://myuser:mypassword@localhost:5432/mydb?sslmode=disable"
-	}
+	// if dbURL == "" {
+	// 	dbURL = "postgres://myuser:mypassword@localhost:5432/mydb?sslmode=disable"
+	// }
 
 	dbpool, err := pgxpool.New(context.Background(), dbURL)
 	if err != nil {
