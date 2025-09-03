@@ -41,6 +41,18 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(task)
 }
 
+// ListTasks godoc
+// @Summary List tasks
+// @Description Get all tasks with optional pagination and filtering by status
+// @Tags tasks
+// @Accept  json
+// @Produce  json
+// @Param status query string false "Task status filter"
+// @Param limit query int false "Limit number of tasks" default(10)
+// @Param page query int false "Skip tasks for pagination" default(1)
+// @Success 200 {array} model.Task
+// @Failure 500 {object} map[string]string
+// @Router /tasks [get]
 func (h *Handler) GetAllTask(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
