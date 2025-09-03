@@ -76,6 +76,8 @@ User Service → http://localhost:8081/swagger/index.html
     - for higher throughput, w ecan use gRPC or message Queues.
 
 ---
+## *Seed*
+- few dummy data will be created once you start the servers for testing.
 
 ## Enjoyed the Assignment.I could have made it more detailed or added more layers. But let me know the feedback. Thanks 😊.
 
