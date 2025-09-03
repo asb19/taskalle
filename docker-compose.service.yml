@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+ 
+  task-service:
+    build:
+      context: ./tasksvc
+      dockerfile: Dockerfile
+    container_name: task-service
+    environment:
+      DATABASE_URL: postgres://myuser:mypassword@postgres-task:5432/taskdb?sslmode=disable
+      USER_SERVICE_URL: http://user-service:8081
+    depends_on:
+      - user-service
+    ports:
+      - "8080:8080"
+
+
+  user-service:
+    build:
+      context: ./usersvc
+      dockerfile: Dockerfile
+    container_name: user-service
+    environment:
+      DATABASE_URL: postgres://myuser:mypassword@postgres-user:5432/userdb?sslmode=disable
+   
+    ports:
+      - "8081:8081"
+
+
+

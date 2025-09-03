@@ -31,7 +31,8 @@ It demonstrates microservice design principles: separation of concerns, CRUD, pa
 ```bash
 git clone https://github.com/asb19/taskalle.git
 cd taskalle
-docker compose up --build -d
+docker compose -f docker-compose.db.yml up -d
+docker compose -f docker-compose.service.yml up -d
 ```
 ## Services
   - Task Service → http://localhost:8080
@@ -50,6 +51,7 @@ docker compose up --build -d
 Swagger docs are available at:
 
 Task Service → http://localhost:8080/swagger/index.html
+User Service → http://localhost:8081/swagger/index.html
 
 ---
 

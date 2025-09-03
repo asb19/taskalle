@@ -24,9 +24,9 @@ import (
 
 func main() {
 	dbURL := os.Getenv("DATABASE_URL")
-	// if dbURL == "" {
-	// 	dbURL = "postgres://myuser:mypassword@localhost:5432/mydb?sslmode=disable"
-	// }
+	if dbURL == "" {
+		dbURL = "postgres://myuser:mypassword@localhost:5432/taskdb?sslmode=disable"
+	}
 
 	dbpool, err := pgxpool.New(context.Background(), dbURL)
 	if err != nil {
@@ -50,6 +50,6 @@ func main() {
 	r.HandleFunc("/tasks/{id}", taskHandler.DeleteTask).Methods("DELETE")
 
 	fmt.Println("🚀 Server running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8082", r))
 
 }

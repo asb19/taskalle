@@ -1,0 +1,40 @@
+basePath: /
+definitions:
+  model.UserPublicInfo:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: This is a simple User microservice with CRUD, pagination, and filtering.
+  title: User Service API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      description: Returns a list of all users (public info only).
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.UserPublicInfo'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all users
+      tags:
+      - users
+schemes:
+- http
+swagger: "2.0"

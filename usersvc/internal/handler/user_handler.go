@@ -27,3 +27,21 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(t)
 }
+
+// GetUsers godoc
+// @Summary Get all users
+// @Description Returns a list of all users (public info only).
+// @Tags users
+// @Produce json
+// @Success 200 {array} model.UserPublicInfo
+// @Failure 500 {object} map[string]string
+// @Router /users [get]
+func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
+
+	users, err := h.service.GetUsers(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(users)
+}

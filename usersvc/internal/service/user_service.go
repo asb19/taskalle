@@ -10,6 +10,7 @@ import (
 
 type UserService interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (*model.UserPublicInfo, error)
+	GetUsers(ctx context.Context) ([]model.UserPublicInfo, error)
 }
 
 type userService struct {
@@ -22,6 +23,10 @@ func NewUserService(repo repo.UserRepository) UserService {
 
 func (s *userService) GetUserByID(ctx context.Context, id uuid.UUID) (*model.UserPublicInfo, error) {
 	return s.repo.GetByID(ctx, id)
+}
+
+func (s *userService) GetUsers(ctx context.Context) ([]model.UserPublicInfo, error) {
+	return s.repo.GetUsers(ctx)
 }
 
 // Define domain-specific errors

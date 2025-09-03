@@ -10,6 +10,7 @@ import (
 
 type UserRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*model.UserPublicInfo, error)
+	GetUsers(ctx context.Context) ([]model.UserPublicInfo, error)
 }
 
 type PostgresUserRepository struct {
@@ -29,4 +30,26 @@ func (r *PostgresUserRepository) GetByID(ctx context.Context, id uuid.UUID) (*mo
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *PostgresUserRepository) GetUsers(ctx context.Context) ([]model.UserPublicInfo, error) {
+	rows, err := r.db.Query(ctx, `SELECT id, name FROM users`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []model.UserPublicInfo
+	for rows.Next() {
+		var u model.UserPublicInfo
+		if err := rows.Scan(&u.Id, &u.Name); err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return users, nil
 }

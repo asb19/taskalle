@@ -1,0 +1,39 @@
+version: "3.9"
+
+
+
+services:
+  postgres-task:
+    image: postgres:16
+    container_name: postgres-task
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: taskdb
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d taskdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  postgres-user:
+    image: postgres:16
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: userdb
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d userdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  task-postgres-data:
+  user-postgres-data:

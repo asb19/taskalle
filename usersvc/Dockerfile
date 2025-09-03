@@ -15,9 +15,15 @@ RUN go build -o usersvc cmd/server/main.go
 
 FROM alpine:3.18
 WORKDIR /app
+RUN apk add --no-cache postgresql-client
+
 COPY --from=builder /usr/local/bin/migrate /usr/local/bin/migrate
 COPY --from=builder /app/usersvc /app/usersvc
 COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/seed.sql ./seed.sql 
 
 ENV DATABASE_URL=postgres://myuser:mypassword@postgres-user:5432/userdb?sslmode=disable
-CMD ["sh", "-c", "migrate -path ./migrations -database $DATABASE_URL up && ./usersvc"]
+CMD ["sh", "-c", "migrate -path ./migrations -database $DATABASE_URL up \ 
+&& psql $DATABASE_URL -f ./seed.sql \
+
+&& ./usersvc"]

@@ -1,4 +1,9 @@
-// cmd/main.go
+// @title User Service API
+// @version 1.0
+// @description This is a simple User microservice with CRUD, pagination, and filtering.
+// @host localhost:8081
+// @BasePath /
+// @schemes http
 package main
 
 import (
@@ -8,11 +13,13 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/asb19/usersvc/docs"
 	"github.com/asb19/usersvc/internal/handler"
 	"github.com/asb19/usersvc/internal/repo"
 	"github.com/asb19/usersvc/internal/service"
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v5/pgxpool"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func main() {
@@ -33,6 +40,9 @@ func main() {
 	userHandler := handler.NewHandler(service)
 
 	r := mux.NewRouter()
+
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	r.HandleFunc("/users", userHandler.GetUsers).Methods("GET")
 
 	r.HandleFunc("/users/{id}", userHandler.GetUser).Methods("GET")
 
